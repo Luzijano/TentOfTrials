@@ -208,6 +208,53 @@ def get_migration_status() -> List[Dict[str, Any]]:
     return status
 
 
+def build_dry_run_plan(
+    status: Optional[List[Dict[str, Any]]] = None,
+    direction: str = "up",
+    target_version: Optional[str] = None,
+) -> List[Dict[str, Any]]:
+    """Build a deterministic migration plan without touching PostgreSQL.
+
+    The plan is intentionally data-only so tests and callers can assert the
+    exact migrations that would be attempted before invoking psql.
+    """
+
+    migrations = list(status if status is not None else get_migration_status())
+
+    if direction == "up":
+        selected = [migration for migration in migrations if not migration.get("applied", False)]
+    elif direction == "down":
+        if not target_version:
+            raise ValueError("target_version is required for rollback dry-run plans")
+
+        applied = [migration for migration in migrations if migration.get("applied", False)]
+        versions = {migration["version"] for migration in migrations}
+        if target_version not in versions:
+            raise ValueError(f"Migration {target_version} not found")
+
+        selected = []
+        for migration in reversed(applied):
+            selected.append(migration)
+            if migration["version"] == target_version:
+                break
+    else:
+        raise ValueError(f"Unsupported migration direction: {direction}")
+
+    return [
+        {
+            "version": migration["version"],
+            "description": migration["description"],
+            "direction": direction,
+            "execution_would_be_attempted": True,
+        }
+        for migration in selected
+    ]
+
+
+def print_dry_run_plan(plan: List[Dict[str, Any]]) -> None:
+    print(json.dumps({"dry_run": True, "plan": plan}, indent=2, sort_keys=True))
+
+
 def run_all_migrations(dry_run: bool = False) -> bool:
     status = get_migration_status()
     pending = [m for m in status if not m["applied"]]
@@ -221,7 +268,7 @@ def run_all_migrations(dry_run: bool = False) -> bool:
         print(f"  {m['version']}: {m['description']}")
 
     if dry_run:
-        print("Dry run - no migrations applied")
+        print_dry_run_plan(build_dry_run_plan(status, direction="up"))
         return True
 
     all_successful = True
@@ -268,6 +315,9 @@ def main():
 
     if args.status:
         status = get_migration_status()
+        if args.dry_run:
+            print_dry_run_plan(build_dry_run_plan(status, direction="up"))
+            return 0
         print(f"\nMigration status:")
         print(f"{'Version':<20} {'Description':<40} {'Status':<10}")
         print("-" * 70)
@@ -284,6 +334,15 @@ def main():
         if not args.version:
             print("--version is required for rollback")
             return 1
+        if args.dry_run:
+            try:
+                print_dry_run_plan(
+                    build_dry_run_plan(get_migration_status(), direction="down", target_version=args.version)
+                )
+            except ValueError as exc:
+                print(str(exc))
+                return 1
+            return 0
         success = apply_migration(args.version, "down")
         return 0 if success else 1
 
