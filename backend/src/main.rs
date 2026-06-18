@@ -1,6 +1,7 @@
 use anyhow::Result;
 use clap::Parser;
 use tent_backend::discovery::ServiceDiscovery;
+use tent_backend::health::serve_health_endpoint;
 use tent_backend::messaging::MessageBroker;
 use tent_backend::registry::ServiceRegistry;
 use tracing_subscriber::EnvFilter;
@@ -21,6 +22,9 @@ struct Cli {
 
     #[arg(short, long, default_value = "/etc/tent/config.toml")]
     config: String,
+
+    #[arg(long, default_value = "127.0.0.1:8080")]
+    health_bind: String,
 }
 
 #[tokio::main]
@@ -51,6 +55,14 @@ async fn main() -> Result<()> {
     registry.initialize().await?;
     discovery.announce(&cli.node_id).await?;
     broker.connect().await?;
+
+    let health_features = vec![
+        "registry".to_string(),
+        "discovery".to_string(),
+        "messaging".to_string(),
+        format!("profile:{}", tent_backend::BUILD_PROFILE),
+    ];
+    tokio::spawn(serve_health_endpoint(cli.health_bind.clone(), health_features));
 
     tracing::info!("all subsystems initialized successfully, entering main loop");
 

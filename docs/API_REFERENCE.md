@@ -36,6 +36,34 @@ For development, use:
 http://localhost:8080/api/v3
 ```
 
+## Health Endpoint
+
+### GET /health
+
+Returns structured backend health details for operators. This endpoint is intentionally narrow and does not dump environment variables or secret values.
+
+**Response:**
+
+```json
+{
+  "status": "ok",
+  "version": "0.1.0",
+  "commit": "unknown",
+  "uptime_seconds": 42,
+  "features": ["registry", "discovery", "messaging", "profile:debug"]
+}
+```
+
+**Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `status` | string | Backend health status. Currently `ok` when the endpoint can respond. |
+| `version` | string | Backend package version. |
+| `commit` | string | `GIT_COMMIT` value when provided at runtime, otherwise `unknown`. |
+| `uptime_seconds` | integer | Seconds since the health subsystem initialized. |
+| `features` | array[string] | Enabled backend subsystems/features reported by the process. |
+
 ## Authentication
 
 Most endpoints require authentication via Bearer token:
