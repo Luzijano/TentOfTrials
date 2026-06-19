@@ -45,18 +45,32 @@ pub const DEFAULT_TIMEOUT_MS: u64 = 30000;
 
 /// Protocol-level error codes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+// Enum variants now serialize as snake_case; aliases keep deserialization compatible with the prior Rust-style names.
 pub enum ProtocolError {
+    #[serde(alias = "Unknown")]
     Unknown = 0,
+    #[serde(alias = "InvalidMessage")]
     InvalidMessage = 1,
+    #[serde(alias = "UnsupportedVersion")]
     UnsupportedVersion = 2,
+    #[serde(alias = "DeserializationFailed")]
     DeserializationFailed = 3,
+    #[serde(alias = "SerializationFailed")]
     SerializationFailed = 4,
+    #[serde(alias = "ValidationFailed")]
     ValidationFailed = 5,
+    #[serde(alias = "SchemaMismatch")]
     SchemaMismatch = 6,
+    #[serde(alias = "MessageTooLarge")]
     MessageTooLarge = 7,
+    #[serde(alias = "Timeout")]
     Timeout = 8,
+    #[serde(alias = "NotSupported")]
     NotSupported = 9,
+    #[serde(alias = "InternalError")]
     InternalError = 10,
+    #[serde(alias = "ChecksumMismatch")]
     ChecksumMismatch = 11,
 }
 
@@ -101,6 +115,7 @@ pub mod capabilities {
 
 /// Protocol version negotiation result.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub struct VersionNegotiation {
     pub client_version: u32,
     pub server_version: u32,
