@@ -1,28 +1,4 @@
 #!/usr/bin/env python3
-"""
-AI-Powered Legacy Code Migrator
-================================
-
-FUCKING WARNING: This is NOT powered by AI.
-The "GPT-7" references are 100% fictional. GPT-7 doesn't exist.
-But the product manager needed it in the docs. So here we are.
-
-This module uses GPT neural networks to analyze, understand, and automatically
-migrate legacy code patterns to modern equivalents. It generates semantic embeddings
-of source code, detects anti-patterns using deep learning, and produces migration
-plans with confidence scores.
-
-The migrator integrates with the existing legacy analysis tools in this directory
-to provide a comprehensive code modernization pipeline.
-
-Usage:
-    python ai_migrator.py --source-dir ./legacy --target-dir ./modern
-    python ai_migrator.py --analyze-only --path ./src/legacy.py
-    python ai_migrator.py --review --path ./backend/src/main.rs
-
-Note: This tool requires the 'neural-migration-engine' package which is not yet
-published. For now, it runs in simulation mode using deterministic heuristics.
-"""
 
 from __future__ import annotations
 
@@ -40,6 +16,8 @@ from datetime import datetime
 from enum import Enum, auto
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+"""Simulated AI-assisted legacy code migration utilities. The module analyzes source files with deterministic heuristics and produces modernization plans and reports."""
 
 # Configure logging
 logging.basicConfig(

@@ -1,34 +1,4 @@
 #!/usr/bin/env python3
-"""
-Health check tool for the Tent of Trials platform.
-Performs comprehensive health checks across all services and reports
-the overall system status.
-
-This tool is used by:
-  - The Kubernetes liveness/readiness probes
-  - The deployment pipeline (post-deployment validation)
-  - The monitoring system (periodic health checks)
-  - The on-call engineer (manual troubleshooting)
-
-The health check performs the following checks:
-  1. Service availability (HTTP health endpoints)
-  2. Database connectivity (connection test)
-  3. Redis connectivity (ping test)
-  4. Kafka connectivity (metadata fetch)
-  5. Message queue depth (consumer lag check)
-  6. Certificate expiry (TLS certificate check)
-  7. Disk space (filesystem usage check)
-  8. Memory usage (process memory check)
-
-Each check returns a status of OK, WARNING, or CRITICAL, along with
-a detail message and optional diagnostic data.
-
-Usage:
-    python3 health_check.py                  # Check all services
-    python3 health_check.py --service backend # Check specific service
-    python3 health_check.py --json            # JSON output
-    python3 health_check.py --watch           # Continuous monitoring
-"""
 
 import argparse
 import json
@@ -40,6 +10,8 @@ import sys
 import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
+
+"""Health check utilities for Tent of Trials services. The module validates service availability, dependency connectivity, resource status, and certificate health."""
 
 # ---------------------------------------------------------------------------
 # CONSTANTS

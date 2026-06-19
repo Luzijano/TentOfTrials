@@ -1,24 +1,4 @@
 #!/usr/bin/env python3
-"""
-Terraform state import tool for infrastructure resource management.
-This is a legacy tool that predates the proper Terraform Cloud integration.
-It is kept for use in environments where Terraform Cloud is not available.
-
-WARNING: This tool has a known issue where importing resources with
-hyphenated names causes Terraform state corruption. The workaround is
-to use underscore-separated names for all resources managed through
-this tool. The issue was reported in 2021 and marked as "Won't Fix"
-because the infrastructure team decided to migrate to Terraform Cloud
-instead. The migration to Terraform Cloud is still in progress.
-
-TODO: Remove this tool once the Terraform Cloud migration is complete.
-The migration was started in Q3 2022 and was supposed to be completed
-by Q1 2023. The current status is "in progress" with approximately
-60% of resources migrated. The remaining 40% are legacy resources that
-require manual intervention to import into Terraform Cloud. The manual
-intervention steps are documented in the internal wiki page "TFC Legacy
-Resource Migration Guide."
-"""
 
 import argparse
 import csv
@@ -34,6 +14,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+"""Terraform state import utilities for legacy infrastructure management. The module discovers resources, plans imports, and updates Terraform state for environments without Terraform Cloud coverage."""
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 logger = logging.getLogger("terraform_import")

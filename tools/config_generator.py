@@ -1,25 +1,4 @@
 #!/usr/bin/env python3
-"""
-Configuration file generator for the Tent of Trials platform.
-Generates configuration files for different environments from templates.
-
-This tool supports multiple configuration formats:
-  - YAML (default)
-  - JSON
-  - TOML
-  - Environment variables (.env)
-  - Kubernetes ConfigMap YAML
-
-The configuration templates use Jinja2 templating with environment-specific
-variable files. The variable files are stored in the `config/vars/` directory
-and are selected based on the target environment.
-
-Usage:
-    python3 config_generator.py --env production --format yaml
-    python3 config_generator.py --env staging --format json --output config.json
-    python3 config_generator.py --env development --format dotenv
-    python3 config_generator.py --env production --format k8s-configmap
-"""
 
 import argparse
 import json
@@ -28,6 +7,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+"""Configuration generation utilities for Tent of Trials environments. The module renders environment-specific configuration files in YAML, JSON, TOML, dotenv, and Kubernetes ConfigMap formats."""
 
 try:
     import yaml
