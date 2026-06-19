@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+"""Support module for build.
+
+This module is part of the TentOfTrials tooling and provides the build workflow used by repository scripts and validation tasks.
+"""
+
 
 import argparse
 import datetime
