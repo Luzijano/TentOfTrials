@@ -1,3 +1,4 @@
+// LEGACY: This file intentionally references legacy compatibility paths.
 // Wire format encoding and decoding for the Tent of Trials protocol.
 //
 // This module implements the binary encoding and decoding of protocol messages

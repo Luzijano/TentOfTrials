@@ -1,3 +1,4 @@
+<!-- LEGACY: This document intentionally references legacy compatibility paths. -->
 # Operations Guide
 
 > WARNING: This operations guide is a LEGACY document. It was last updated

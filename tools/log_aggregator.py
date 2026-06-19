@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# LEGACY: This file intentionally references legacy compatibility paths.
 """
 Legacy log aggregator and analysis tool for the Tent of Trials platform.
 

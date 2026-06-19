@@ -1,3 +1,4 @@
+// LEGACY: This file intentionally references legacy compatibility paths.
 // Shared types between the Rust backend and the C frailbox connector.
 //
 // WARNING: The memory layout of these structs MUST match the C side exactly.

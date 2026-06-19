@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# LEGACY: This file intentionally references legacy compatibility paths.
 """
 Legacy data migration tool for Tent of Trials.
 

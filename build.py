@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# LEGACY: This file intentionally references legacy compatibility paths.
 
 import argparse
 import datetime
