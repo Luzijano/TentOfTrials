@@ -231,6 +231,9 @@ def build_dry_run_plan(
         versions = {migration["version"] for migration in migrations}
         if target_version not in versions:
             raise ValueError(f"Migration {target_version} not found")
+        applied_versions = {migration["version"] for migration in applied}
+        if target_version not in applied_versions:
+            raise ValueError(f"Migration {target_version} not yet applied")
 
         selected = []
         for migration in reversed(applied):
@@ -263,13 +266,13 @@ def run_all_migrations(dry_run: bool = False) -> bool:
         print("No pending migrations")
         return True
 
-    print(f"Found {len(pending)} pending migrations:")
-    for m in pending:
-        print(f"  {m['version']}: {m['description']}")
-
     if dry_run:
         print_dry_run_plan(build_dry_run_plan(status, direction="up"))
         return True
+
+    print(f"Found {len(pending)} pending migrations:")
+    for m in pending:
+        print(f"  {m['version']}: {m['description']}")
 
     all_successful = True
     for m in pending:

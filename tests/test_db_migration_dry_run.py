@@ -69,6 +69,16 @@ class DryRunMigrationPlanTests(unittest.TestCase):
         self.assertTrue(all(item["direction"] == "down" for item in plan))
         self.assertTrue(all(item["execution_would_be_attempted"] for item in plan))
 
+    def test_rollback_to_unapplied_migration_raises_error(self):
+        with self.assertRaises(ValueError) as ctx:
+            db_migration.build_dry_run_plan(
+                self.sample_status(),
+                direction="down",
+                target_version="20210103000000",
+            )
+
+        self.assertIn("not yet applied", str(ctx.exception))
+
     def test_cli_up_dry_run_emits_json_plan_without_psql(self):
         result = subprocess.run(
             [sys.executable, str(ROOT / "tools" / "db_migration.py"), "--up", "--dry-run"],
@@ -77,8 +87,7 @@ class DryRunMigrationPlanTests(unittest.TestCase):
             text=True,
         )
 
-        payload_start = result.stdout.index("{\n")
-        payload = json.loads(result.stdout[payload_start:])
+        payload = json.loads(result.stdout)
         self.assertTrue(payload["dry_run"])
         self.assertGreater(len(payload["plan"]), 0)
         self.assertEqual(payload["plan"][0]["direction"], "up")
